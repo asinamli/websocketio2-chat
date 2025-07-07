@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import io, { Socket } from "socket.io-client";
+import RoomUsersModal from "./RoomUsersModal";
+import RoomListModal from "./RoomListModal";
 
 interface ChatBoxProps {
   room: string;
@@ -11,45 +13,42 @@ interface ChatBoxProps {
 export default function ChatBox({ room, name }: ChatBoxProps) {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
+  const [users, setUsers] = useState<string[]>([]);
+  const [showUsers, setShowUsers] = useState(false);
+  const [showRooms, setShowRooms] = useState(false);
+
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    if (!socketRef.current) {
-      socketRef.current = io({
-        path: "/api/socket",
-      });
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+      socketRef.current = null;
     }
 
- 
-    socketRef.current.emit("join-room", { room, name });
+    const socket = io({ path: "/api/socket" });
+    socketRef.current = socket;
+
+    socket.emit("join-room", { room, name });
+
+    socket.on("receive-message", (msg: string) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    socket.on("room-users", (users: string[]) => {
+      setUsers(users);
+    });
+
+    socket.on("error", (msg: string) => {
+      alert(msg);
+    });
+
+    setMessages([]);
 
     return () => {
-      
+      socket.disconnect();
+      socketRef.current = null;
     };
   }, [room, name]);
-
- 
-  useEffect(() => {
-    if (!socketRef.current) return;
-
-    const socket = socketRef.current;
-
-    const handleReceive = (msg: string) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-
-    const handleError = (msg: string) => {
-      alert(msg);
-    };
-
-    socket.on("receive-message", handleReceive);
-    socket.on("error", handleError);
-
-    return () => {
-      socket.off("receive-message", handleReceive);
-      socket.off("error", handleError);
-    };
-  }, []);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -59,12 +58,28 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
       message: input,
       name,
     });
+
     setInput("");
   };
 
   return (
-    <div className="border rounded p-4 flex flex-col h-96 max-w-xl mx-auto">
-      <div className="flex-grow overflow-y-auto mb-4">
+    <div className="border rounded p-4 flex flex-col h-[500px] max-w-xl mx-auto">
+      <div className="flex justify-between mb-2">
+        <button
+          onClick={() => setShowUsers(true)}
+          className="bg-green-500 text-white px-3 py-1 rounded"
+        >
+          Odadaki Kullanıcılar
+        </button>
+        <button
+          onClick={() => setShowRooms(true)}
+          className="bg-yellow-500 text-white px-3 py-1 rounded"
+        >
+          Odalar Arası Geçiş
+        </button>
+      </div>
+
+      <div className="flex-grow overflow-y-auto mb-4 border p-2 rounded">
         {messages.map((msg, i) => (
           <div key={i} className="mb-1">
             {msg}
@@ -75,7 +90,7 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="mesajınızı girin"
+          placeholder="Mesajınızı girin"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -90,6 +105,19 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
           Gönder
         </button>
       </div>
+
+      <RoomUsersModal
+        open={showUsers}
+        onClose={() => setShowUsers(false)}
+        users={users}
+      />
+
+      <RoomListModal
+        open={showRooms}
+        onClose={() => setShowRooms(false)}
+        currentRoom={room}
+        name={name}
+      />
     </div>
   );
 }
