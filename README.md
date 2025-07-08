@@ -5,40 +5,232 @@
 - Layout padding sorunları düzeltildi
 - Yeni admin login ve dashboard sayfaları eklendi
 
+# WebSocket Chat Uygulaması
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Modern, gerçek zamanlı chat uygulaması. Next.js, Socket.IO ve TypeScript kullanılarak geliştirilmiştir.
 
-## Getting Started
+## 🚀 Özellikler
 
-First, run the development server:
+- **Gerçek zamanlı mesajlaşma** - Anında mesaj iletimi
+- **Çoklu oda desteği** - Farklı odalarda sohbet
+- **Admin paneli** - Odaları ve kullanıcıları yönetme
+- **Responsive tasarım** - Mobil ve masaüstü uyumlu
+- **Modern UI** - Tailwind CSS ile şık tasarım
+
+## 📋 Gereksinimler
+
+Projeyi çalıştırmak için sisteminizde şunlar yüklü olmalıdır:
+
+- **Node.js** (v18.0.0 veya üzeri)
+- **npm** (Node.js ile birlikte gelir)
+- **Git** (opsiyonel, klonlama için)
+
+### Node.js Kurulumu
+
+1. [Node.js resmi sitesine](https://nodejs.org/) gidin
+2. "LTS" versiyonu indirin ve kurun
+3. Terminal/cmd'de kontrol edin:
+   ```bash
+   node --version
+   npm --version
+   ```
+
+## 🔧 Kurulum
+
+### 1. Projeyi İndirin
+
+**Git ile klonlama:**
+```bash
+git clone https://github.com/asinamli/websocketio2-chat.git
+cd websocketio2-chat
+```
+
+**Veya ZIP olarak indirin:**
+- GitHub'dan "Code" > "Download ZIP"
+- ZIP'i çıkarın ve klasöre girin
+
+### 2. Bağımlılıkları Yükleyin
+
+```bash
+npm install
+```
+
+### 3. Geliştirme Sunucusunu Başlatın
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Uygulamayı Açın
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tarayıcınızda şu adresi açın:
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Kullanım
 
-## Learn More
+### Chat Kullanımı
 
-To learn more about Next.js, take a look at the following resources:
+1. **Ana sayfa**'da (`http://localhost:3000`)
+2. **İsminizi** girin
+3. **Oda adı** girin (yoksa otomatik oluşturulur)
+4. **"Odaya Katıl"** butonuna tıklayın
+5. **Mesajlaşmaya** başlayın!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Admin Paneli
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Admin Giriş**'e tıklayın (`http://localhost:3000/admin/login`)
+2. **Şifre**: `admin123`
+3. **Dashboard**'da tüm odaları ve kullanıcıları görün
 
-## Deploy on Vercel
+## 📁 Proje Yapısı
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+websocket-chat-v2/
+├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   │   ├── dashboard/page.tsx    # Admin paneli
+│   │   │   └── login/page.tsx        # Admin giriş
+│   │   ├── globals.css               # Global stiller
+│   │   ├── layout.tsx                # Ana layout
+│   │   └── page.tsx                  # Ana sayfa
+│   └── components/
+│       ├── ChatBox.tsx               # Chat bileşeni
+│       ├── RoomUsersModal.tsx        # Kullanıcı listesi modal
+│       └── RoomListModal.tsx         # Oda listesi modal
+├── pages/
+│   └── api/
+│       └── socket.ts                 # Socket.IO sunucusu
+├── package.json
+└── README.md
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 Deployment (Yayınlama)
+
+### Vercel ile Deployment
+
+1. **Vercel hesabı** oluşturun: [vercel.com](https://vercel.com)
+2. **GitHub repo'nuz** ile bağlayın
+3. **Auto-deploy** aktif olur
+4. Her git push'ta otomatik güncellenir
+
+### Netlify ile Deployment
+
+1. **Netlify hesabı** oluşturun: [netlify.com](https://netlify.com)
+2. **GitHub repo'nuz** ile bağlayın
+3. **Build komutu**: `npm run build`
+4. **Publish directory**: `.next`
+
+### Manuel Deployment
+
+```bash
+# Projeyi build edin
+npm run build
+
+# Production sunucusunu başlatın
+npm start
+```
+
+## 🔧 Yapılandırma
+
+### Socket.IO Ayarları
+
+`pages/api/socket.ts` dosyasında:
+
+```typescript
+// CORS ayarları
+cors: {
+  origin: "*",  // Production'da domain'inizi belirtin
+  methods: ["GET", "POST"]
+}
+```
+
+### Admin Şifresi
+
+`src/app/admin/login/page.tsx` dosyasında:
+
+```typescript
+// Şifreyi değiştirin
+const correctPassword = "admin123";  // Buraya yeni şifre
+```
+
+## 🐛 Sorun Giderme
+
+### Port Zaten Kullanımda
+
+```bash
+# Farklı port kullanın
+npm run dev -- --port 3001
+```
+
+### Socket Bağlantı Sorunu
+
+1. **Firewall** ayarlarını kontrol edin
+2. **3000 portu** açık olmalı
+3. **Localhost** yerine IP adresi deneyin
+
+### Build Hatası
+
+```bash
+# node_modules'ı temizleyin
+rm -rf node_modules
+npm install
+```
+
+## 🛠️ Geliştirme
+
+### Yeni Özellik Ekleme
+
+1. **Branch** oluşturun:
+   ```bash
+   git checkout -b yeni-ozellik
+   ```
+
+2. **Değişiklik** yapın
+
+3. **Test** edin:
+   ```bash
+   npm run dev
+   ```
+
+4. **Commit** edin:
+   ```bash
+   git add .
+   git commit -m "Yeni özellik: ..."
+   git push origin yeni-ozellik
+   ```
+
+### Teknolojiler
+
+- **Next.js 14** - React framework
+- **Socket.IO** - Gerçek zamanlı iletişim
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **React Hooks** - State management
+
+## 📞 Destek
+
+Sorularınız için:
+
+- **GitHub Issues**: [Sorun bildirin](https://github.com/asinamli/websocketio2-chat/issues)
+- **Email**: [İletişim](mailto:asinamli@example.com)
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 🤝 Katkıda Bulunma
+
+1. **Fork** edin
+2. **Feature branch** oluşturun
+3. **Commit** edin
+4. **Push** edin
+5. **Pull Request** oluşturun
+
+---
+
+**Teşekkürler!** 🎉
+
+Bu README size yardımcı oldu mu? Sorunuz varsa çekinmeden sorun!
