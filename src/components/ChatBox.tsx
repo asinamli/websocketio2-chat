@@ -10,8 +10,14 @@ interface ChatBoxProps {
   name: string;
 }
 
+interface Message {
+  message: string;
+  username: string;
+  timestamp: string;
+}
+
 export default function ChatBox({ room, name }: ChatBoxProps) {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [users, setUsers] = useState<string[]>([]);
   const [showUsers, setShowUsers] = useState(false);
@@ -28,9 +34,9 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
     const socket = io({ path: "/api/socket" });
     socketRef.current = socket;
 
-    socket.emit("join-room", { room, name });
+    socket.emit("join-room", { room, username: name });
 
-    socket.on("receive-message", (msg: string) => {
+    socket.on("receive-message", (msg: Message) => {
       setMessages((prev) => [...prev, msg]);
     });
 
@@ -56,7 +62,7 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
     socketRef.current?.emit("send-message", {
       room,
       message: input,
-      name,
+      username: name,
     });
 
     setInput("");
@@ -82,7 +88,11 @@ export default function ChatBox({ room, name }: ChatBoxProps) {
       <div className="flex-grow overflow-y-auto mb-4 border p-2 rounded">
         {messages.map((msg, i) => (
           <div key={i} className="mb-1">
-            {msg}
+            <span className="font-bold">{msg.username}: </span>
+            <span>{msg.message}</span>
+            <small className="text-gray-500 ml-2">
+              {new Date(msg.timestamp).toLocaleTimeString()}
+            </small>
           </div>
         ))}
       </div>
