@@ -1,3 +1,11 @@
+- Modern ve responsive admin dashboard tasarımı
+- Gerçek zamanlı oda ve kullanıcı takibi
+- Socket.io bağlantı yönetimi iyileştirildi
+- ChatBox component'i güncellendi
+- Layout padding sorunları düzeltildi
+- Yeni admin login ve dashboard sayfaları eklendi
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
