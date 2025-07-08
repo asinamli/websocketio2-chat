@@ -215,7 +215,7 @@ npm install
 Sorularınız için:
 
 - **GitHub Issues**: [Sorun bildirin](https://github.com/asinamli/websocketio2-chat/issues)
-- **Email**: [İletişim](mailto:asinamli@example.com)
+- **Email**: [İletişim](mailto:namliasiyee@gmail.com)
 
 ## 📄 Lisans
 
